@@ -9,13 +9,17 @@
 g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk  
 ./server
 ```
-
 #### Rest API
 **IMPORTANT: Set token key in header**   
 ```
 CwesTokenAPI: [token-key]
 ```
+<details>
+<summary>
+
 ##### 1. HCNet
+</summary>
+
 ###### Scanning, scan ip of HCNet device in a network range
 >Method: POST  
 >Url: [ip]:[port]/hcnet/scanning  
@@ -168,3 +172,4 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http:/
 {"action":"changegw","status":"failed","detail":"check your device or new gateway address and try again"}  
 {"action":"changegw","status":"success","detail":newgw}
 ```
+</details>
