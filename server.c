@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 void signal_handler(int sig)
 {
 	/* Server exiting */
-	printf("[INFO]{Cwes}   Cwes server exit\n");
+	printf("\n[INFO]{Cwes}   Cwes server exit\n");
 	close(server);
 	exit(1);
 }
