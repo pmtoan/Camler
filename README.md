@@ -11,7 +11,7 @@ g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk
 ```
 
 #### Rest API
-**Set token key in header**   
+**IMPORTANT: Set token key in header**   
 ```
 CwesTokenAPI: [token-key]
 ```
@@ -26,7 +26,10 @@ CwesTokenAPI: [token-key]
 ```
 curl -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
 ```  
- 
+>JSON response
+```
+{"action":"scan","status":"success","detail":['list ip of up device']}
+```
 ###### Capture picture
 >Method: POST  
 >Url: [ip]:[port]/hcnet/capture  
@@ -39,7 +42,12 @@ curl -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/capture
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"capture","status":"failed","detail":"capture failed, check your device or try again"}  
+{"action":"capture","status":"success","detail":"storage/picture.jpeg"}
+```
 ###### Get account information
 >Method: POST  
 >Url: [ip]:[port]/hcnet/get/userinfo  
@@ -52,7 +60,12 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/userinfo
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getuserinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}  
+{"action":"getuserinfo","status":"success","detail":['list username and password']}
+```
 ###### Get network information
 >Method: POST  
 >Url: [ip]:[port]/hcnet/get/netinfo  
@@ -65,7 +78,12 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/netinfo
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}  
+{"action":"getnetinfo","status":"success","detail":[ip, netmask, httpport, dns1, dns2, gw]}
+```
 ###### Change ip address of device
 >Method: POST  
 >Url: [ip]:[port]/hcnet/change/ip  
@@ -81,7 +99,13 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255.255.255.0&eport=0" -X POST http://127.0.0.1:30497/hcnet/change/ip
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
+{"action":"changeip","status":"failed","detail":"check your device or new ip address and try again"}  
+{"action":"changeip","status":"success","detail":newip}
+```
 ###### Change password of account
 >Method: POST  
 >Url: [ip]:[port]/hcnet/change/pass  
@@ -96,7 +120,13 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X POST http://127.0.0.1:30497/hcnet/change/pass
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getuserinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
+{"action":"changepass","status":"failed","detail":"check your device or try again"}  
+{"action":"changepass","status":"success","detail":newpass}
+```
 ###### Change DNS server
 >Method: POST  
 >Url: [ip]:[port]/hcnet/change/dns  
@@ -111,7 +141,13 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X POST http://127.0.0.1:30497/hcnet/change/dns
 ```
-
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getnwtinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
+{"action":"changedns","status":"failed","detail":"check your device or new dns address and try again"}  
+{"action":"changedns","status":"success","detail":{dns1, dns2}}
+```
 ###### Change gateway address
 >Method: POST  
 >Url: [ip]:[port]/hcnet/change/gw  
@@ -124,4 +160,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X 
 >Example with curl
 ```
 curl -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http://127.0.0.1:30497/hcnet/change/gw
+```
+>JSON response
+```
+{"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
+{"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
+{"action":"changegw","status":"failed","detail":"check your device or new gateway address and try again"}  
+{"action":"changegw","status":"success","detail":newgw}
 ```
