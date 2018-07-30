@@ -1,0 +1,1 @@
+{"action":"getnetinfo","status":"success","detail":[{"ip":"172.22.22.152","netmask":"255.255.255.0","httpport":"80","dns1":"8.8.8.8","dns2":"0.0.0.0","gateway":"192.168.1.1"},{"ip":"0.0.0.0","netmask":"0.0.0.0","httpport":"80","dns1":"8.8.8.8","dns2":"0.0.0.0","gateway":"192.168.1.1"}]}

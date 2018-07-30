@@ -1,0 +1,35 @@
+log()
+{
+	outputs error, sorry or log messages to the nweb.log file
+	if a sorry message, transmit it to the browser as a fake HTML response
+	if error or sorry message the program is stopped
+}
+web() - this function returns the request back to the browser
+{
+	read from the socket the HTTP request
+	check it’s a simple GET command
+	check no parent directory requested to escape the web servers home directory
+	if no file name given assume index.html
+	check the file extension is valid and supported
+	check the file is readable by opening it
+	transmit the HTTP header to the browser
+	transmit the file contents to the browser
+	if LINUX sleep for one second to ensure the data arrives at the browser
+	stop
+}
+main()
+{
+	if option is "-?", output the hints and stop
+	check the directory supplied is sensible and not a security risk
+	become a daemon process
+	ignore child programs (to avoid zombies when child processes stop)
+	create a socket, bind it to a port number and start listening to the socket
+	forever {
+	
+		wait and accept incoming socket connection
+		fork a child process
+		if the child process then call the web function
+		else close new connection
+
+	}
+}
