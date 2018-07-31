@@ -14,6 +14,10 @@ g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk
 ```
 CwesTokenAPI: [token-key]
 ```
+>JSON response without API token key
+```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
+```
 <details>
 <summary>
 
@@ -28,10 +32,11 @@ CwesTokenAPI: [token-key]
 
 >Example with curl
 ```
-curl -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
 ```  
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"scan","status":"success","detail":['list ip of up device']}
 ```
 ###### Capture picture
@@ -44,10 +49,11 @@ curl -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/capture
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/capture
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"capture","status":"failed","detail":"capture failed, check your device or try again"}  
 {"action":"capture","status":"success","detail":"storage/picture.jpeg"}
@@ -62,10 +68,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/userinfo
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/userinfo
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getuserinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}  
 {"action":"getuserinfo","status":"success","detail":['list username and password']}
@@ -80,10 +87,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/netinfo
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/netinfo
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}  
 {"action":"getnetinfo","status":"success","detail":[ip, netmask, httpport, dns1, dns2, gw]}
@@ -101,10 +109,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:3049
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255.255.255.0&eport=0" -X POST http://127.0.0.1:30497/hcnet/change/ip
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255.255.255.0&eport=0" -X POST http://127.0.0.1:30497/hcnet/change/ip
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
 {"action":"changeip","status":"failed","detail":"check your device or new ip address and try again"}  
@@ -122,10 +131,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X POST http://127.0.0.1:30497/hcnet/change/pass
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X POST http://127.0.0.1:30497/hcnet/change/pass
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getuserinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
 {"action":"changepass","status":"failed","detail":"check your device or try again"}  
@@ -143,10 +153,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X POST http://127.0.0.1:30497/hcnet/change/dns
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X POST http://127.0.0.1:30497/hcnet/change/dns
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getnwtinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
 {"action":"changedns","status":"failed","detail":"check your device or new dns address and try again"}  
@@ -163,10 +174,11 @@ curl -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X 
 
 >Example with curl
 ```
-curl -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http://127.0.0.1:30497/hcnet/change/gw
+curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http://127.0.0.1:30497/hcnet/change/gw
 ```
 >JSON response
 ```
+{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
 {"action":"login","status":"failed","detail":"check your IP address of device or username and password"}  
 {"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
 {"action":"changegw","status":"failed","detail":"check your device or new gateway address and try again"}  
