@@ -31,10 +31,8 @@
 #define NOTFOUND "{\"action\":\"access\",\"status\":\"not found\",\"detail\":\"check url and try again\"}"
 
 /*
-*	Admin ssername and password
+*	Admin API token key
 */
-#define ADMIN_USER	"admin"
-#define ADMIN_PASS	"admin123"
 #define API_TOKEN "GXwmHg7kuYw0UQv5wRwzsUBKmtXe9TbrvuGYnoLKzDjCqdApPwI4APEI77HiWqklHpRtofrakiECY4541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7"
 
 #endif

@@ -17,9 +17,12 @@ int main(int argc, char* argv[])
 	if (argc > 1)
 		port = atoi(argv[1]);
 	if (bindToPort(server, port) == -1)
+	{
+		printf("[ERROR]{Cwes}   Can't bind to port %d\n", port);
 		exit(-1);
+	}
 	listenClient(server, 1000);
-	printf("[INFO]{Cwes}   Cwes server running on 0::%d\n", port);
+	printf("[INFO]{Cwes}   HIK Vision camera controller running on 0::%d\n", port);
 	struct sockaddr_storage client_addr;
 	unsigned int address_size = sizeof(client_addr);
 	int connect; /* Variable store socker from client */
@@ -51,7 +54,6 @@ int main(int argc, char* argv[])
 			signal(SIGINT, SIG_DFL);	/* Clear signal handler in child process, when parent exit, child will be exit too */
 			hear(connect, message, 4*KBYTE_T);	/* Recive message from client */
 			HTTPReq req = parseHTTPReq(message);	/* Parse message to http request */
-			// printHTTPReq(req);
 			HTTPRes res = handleRequest(req);	/* Handle request */
 			printf("[INFO]{Cwes}   %s %s %s @ %d.%d.%d.%d:%d\n", 
 				req._method, req._requestURI, req._httpVersion,
@@ -62,6 +64,7 @@ int main(int argc, char* argv[])
 			if (res._isValid == 1)
 				/* If request is valid, send message response to client */
 				say(connect, composeHTTPRes(res));
+			exit(0);
 		}
 		/*
 		*	Because child process stay connection with client, 
@@ -77,7 +80,7 @@ int main(int argc, char* argv[])
 void signal_handler(int sig)
 {
 	/* Server exiting */
-	printf("\n[INFO]{Cwes}   Cwes server exit\n");
+	printf("\n[INFO]{Cwes}   HIK Vision camera controller exit\n");
 	close(server);
 	exit(1);
 }
