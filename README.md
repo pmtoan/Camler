@@ -2,28 +2,21 @@
 * Camler is a Rest API server camera controller  
 * Base on [Cwes](https://github.com/pmtoan/Cwes) 
 * Manufacturer support:  
->* [HIK VISOIN](https://www.hikvision.com/en)  
+>* [HIK VISION](https://www.hikvision.com/en)  
 
 #### Build and run server
 ```
+git clone https://github.com/pmtoan/Camler.git
+cd Camler
 g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk  
 ./server
 ```
 #### Rest API
-**IMPORTANT: Set token key in header**   
-```
-CwesTokenAPI: [token-key]
-```
->JSON response without API token key
-```
-{"action":"access","status":"unauthorized","detail":"check url or parameter and try again"}
-```
-<details>
-<summary>
+##### Header
+* Content-Type: application/x-www-form-urlencoded
+* CwesTokenAPI: key in file APIKeyAdmin.txt
 
-##### 1. HCNet
-</summary>
-
+##### Body
 ###### Scanning, scan ip of HCNet device in a network range
 >Method: POST  
 >Url: [ip]:[port]/hcnet/scanning  
@@ -183,5 +176,3 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 {"action":"getnetinfo","status":"failed","detail":"can't get device config parameter, check your device and try again"}
 {"action":"changegw","status":"failed","detail":"check your device or new gateway address and try again"}  
 {"action":"changegw","status":"success","detail":newgw}
-```
-</details>
