@@ -24,6 +24,7 @@ typedef struct JSONObjects
 	JSONObj* _element;
 }JSONObjs;
 
+char* timestamp();
 int countStrStr(const char* str, const char* subStr);
 int compareStrStr(const char* str1, const char* str2);
 int strcha(const char* str, char cha);
@@ -34,6 +35,16 @@ char* replaceStrStr(const char* string, const char* substr, const char* replacem
 JSONObj createJSONObj(const char* key, const char* value);
 char* composeJSONObj(JSONObjs objs);
 JSONObj getJSONObj(JSONObjs objs, const char* key);
+
+char* timestamp()
+{
+    time_t ltime; /* calendar time */
+    ltime=time(NULL); /* get current cal time */
+    char* ts = (char*)malloc(64);
+    sprintf(ts, "%s", asctime( localtime(&ltime) ));
+    ts[strlen(ts)-1] = '\0';
+    return ts;
+}
 
 JSONObj createJSONObj(const char* key, const char* value)
 {

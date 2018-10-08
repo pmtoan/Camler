@@ -48,10 +48,8 @@ char* HCNetCapture(const char* s_ip, int s_port, const char* s_user, const char*
     strPicPara.wPicQuality = 2;
     strPicPara.wPicSize = 0;
     int iRet;
-    time_t timestamp_sec;
-    time(&timestamp_sec);
     char* default_path = (char*)malloc(1024);
-    sprintf(default_path, "%s/%ld.jpeg", DEFAULT_STORAGE, timestamp_sec);
+    sprintf(default_path, "%s/%ld.jpeg", DEFAULT_STORAGE, timestamp());
     iRet = NET_DVR_CaptureJPEGPicture(lUserID, struDeviceInfo.byStartChan, &strPicPara, default_path);
     if (!iRet)
     {
