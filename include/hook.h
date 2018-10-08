@@ -70,27 +70,9 @@ HTTPRes hookDynamic(const char* payload)
 HTTPRes hookRoot()
 {
 	/*
-	*	Return root page, public/welcome.html
+	*	Return root page
 	*/
-	return hookStatic("public/welcome.html");
-}
-
-HTTPRes hookLogin(const char* parameter)
-{
-	/*
-	*	Handle login request
-	*	Source:			public/welcome.html
-	*	Destination:	public/index.html or public/deny.html
-	*/
-	JSONObjs objs = parsePostParameterToJSONObj(parameter);
-	JSONObj objKey = getJSONObj(objs, "key");
-	JSONObj objUser = getJSONObj(objs, "user");
-	JSONObj objPass = getJSONObj(objs, "pass");
-	if ((countStrStr(objUser._value, ADMIN_USER))
-		&& (countStrStr(objPass._value, ADMIN_PASS)))
-		return hookStatic("public/index.html");
-	else
-		return hookStatic("public/deny.html");
+	return hookDynamic("unauthorized");
 }
 
 HTTPRes hookScanning(const char* parameter)
@@ -101,7 +83,7 @@ HTTPRes hookScanning(const char* parameter)
 	JSONObjs objs = parsePostParameterToJSONObj(parameter);
 	JSONObj objIp = getJSONObj(objs, "iprange");
 	if (strlen(objIp._value)==0 || strlen(objIp._key) == 0)
-		return hookDynamic(UNAUTHORIZED);
+		return hookDynamic("unauthorized");
 	return hookDynamic(HCNetScan(objIp._value, 2, 254));
 }
 

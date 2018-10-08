@@ -15,15 +15,9 @@ HTTPRes handleRequest(HTTPReq req)
 	*	Main server handler
 	*	Check request from client and return response 
 	*/
-	HTTPRes res;
-	if((req._requestURI[0] == '/')
-		/*
-		*	Handle request root page
-		*/
-		&& (strlen(req._requestURI) == 1)
-		&& (strstr(req._method, "GET")))
-		res = hookRoot();
-	else if (strstr(req._method, POST))
+	if (strstr(req._method, "POST")
+		|| strstr(req._method, "post")
+		||strstr(req._method, "Post"))
 	{
 		/*
 		*	Get POST parameter
@@ -38,31 +32,30 @@ HTTPRes handleRequest(HTTPReq req)
 			i++;
 		}
 		if (compareStrStr(tokenKey, API_TOKEN) == 0)
-			res = hookDynamic(UNAUTHORIZED);
+			return hookDynamic("unauthorized");
 		else if (!strstr(req._otherFields[i-1], "="))
-			res = hookDynamic(UNAUTHORIZED);
-		else if (compareStrStr(req._requestURI, "/login") == 1)
-			res = hookLogin(req._otherFields[i-1]);
+			return hookDynamic("unauthorized");
 		else if (compareStrStr(req._requestURI, "/hcnet/scanning") == 1)
-			res = hookScanning(req._otherFields[i-1]);
+			return hookScanning(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/capture") == 1)
-			res = hookHCNetCapture(req._otherFields[i-1]);
+			return hookHCNetCapture(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/get/userinfo") == 1)
-			res = hookHCNetGetUserInfo(req._otherFields[i-1]);
+			return hookHCNetGetUserInfo(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/change/pass") == 1)
-			res = hookHCNetChangePass(req._otherFields[i-1]);
+			return hookHCNetChangePass(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/get/netinfo") == 1)
-			res = hookHCNetGetNetInfo(req._otherFields[i-1]);
+			return hookHCNetGetNetInfo(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/change/ip") == 1)
-			res = hookHCNetChangeIp(req._otherFields[i-1]);
+			return hookHCNetChangeIp(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/change/dns") == 1)
-			res = hookHCNetChangeDNS(req._otherFields[i-1]);
+			return hookHCNetChangeDNS(req._otherFields[i-1]);
 		else if (compareStrStr(req._requestURI, "/hcnet/change/gw") == 1)
-			res = hookHCNetChangeGW(req._otherFields[i-1]);
+			return hookHCNetChangeGW(req._otherFields[i-1]);
+		else
+			return hookDynamic("unauthorized");
 	}
 	else
-		res = hookDynamic(NOTFOUND);
-	return res;
+		return hookDynamic("unauthorized");
 }
 
 #endif
