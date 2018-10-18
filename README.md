@@ -14,7 +14,7 @@ g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk
 #### Rest API
 ##### Header
 * Content-Type: application/x-www-form-urlencoded
-* CwesTokenAPI: key in file APIKeyAdmin.txt
+* TokenAPI: key in file APIKeyAdmin.txt
 
 ##### Body
 ###### Scanning, scan ip of HCNet device in a network range
@@ -25,7 +25,7 @@ g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "iprange=172.22.22" -X POST http://127.0.0.1:30497/hcnet/scanning
 ```  
 >JSON response
 ```
@@ -42,7 +42,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/capture
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/capture
 ```
 >JSON response
 ```
@@ -61,7 +61,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/userinfo
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/userinfo
 ```
 >JSON response
 ```
@@ -80,7 +80,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/netinfo
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password" -X POST http://127.0.0.1:30497/hcnet/get/netinfo
 ```
 >JSON response
 ```
@@ -102,7 +102,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255.255.255.0&eport=0" -X POST http://127.0.0.1:30497/hcnet/change/ip
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&newip=192.168.1.12&newmask=255.255.255.0&eport=0" -X POST http://127.0.0.1:30497/hcnet/change/ip
 ```
 >JSON response
 ```
@@ -124,7 +124,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X POST http://127.0.0.1:30497/hcnet/change/pass
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&puser=admin&ppass=password" -X POST http://127.0.0.1:30497/hcnet/change/pass
 ```
 >JSON response
 ```
@@ -146,7 +146,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X POST http://127.0.0.1:30497/hcnet/change/dns
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&dns1=8.8.8.8&dns2=8.8.4.4" -X POST http://127.0.0.1:30497/hcnet/change/dns
 ```
 >JSON response
 ```
@@ -167,7 +167,7 @@ curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "i
 
 >Example with curl
 ```
-curl -H "CwesTokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http://127.0.0.1:30497/hcnet/change/gw
+curl -H "TokenAPI: 541XBgagY3zJ96SMM1slGF10uc3v5a374yjN1v1ycQz6iULwV7" -d "ip=192.168.1.10&user=admin&pass=password&gw=192.168.1.1" -X POST http://127.0.0.1:30497/hcnet/change/gw
 ```
 >JSON response
 ```
