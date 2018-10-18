@@ -1,7 +1,6 @@
 #ifndef SCANNING
 #define SCANNING
 #include "libHCNet.h"
-#include "../type.h"
 #include "../utils.h"
 #include "../protocol.h"
 #include "stdio.h"
@@ -10,9 +9,9 @@
 #include "unistd.h"
 #include "time.h"
 
-char* HCNetScan(const char* ip_range, int begin, int end)
+char* hcnet_scanning(const char* ip_range, int begin, int end)
 {
-	char* status = (char*)malloc(8*KBYTE_T);
+	char* status = (char*)malloc(4*SIZE_LARGE);
     NET_DVR_SetConnectTime(300, 1);
     NET_DVR_DEVICEINFO_V30 struDeviceInfo;
     char ip[16];
@@ -38,15 +37,15 @@ char* HCNetScan(const char* ip_range, int begin, int end)
     sprintf(status, "[");
     for(i=0;i<up_index;i++)
     {
-        JSONObjs objs;
+        json_objs objs;
         objs._size = 2;
-        objs._element = (JSONObj*)malloc(i*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("ip", ip_up[i]);
-        objs._element[1] = createJSONObj("company", "HCNet");
+        objs._element = (json_obj*)malloc(i*sizeof(json_obj));
+        objs._element[0] = create_json("ip", ip_up[i]);
+        objs._element[1] = create_json("company", "HCNet");
         if (i>0)
-            sprintf(status, "%s,%s", status, composeJSONObj(objs));
+            sprintf(status, "%s,%s", status, compose_json(objs));
         else
-            sprintf(status, "%s%s", status, composeJSONObj(objs));
+            sprintf(status, "%s%s", status, compose_json(objs));
     }
     strcat(status, "]");
     char* r_return = (char*)malloc(1024);

@@ -1,6 +1,7 @@
-#ifndef SERVER_H
-#define SERVER_H
-/* System libraries */
+#ifndef CAMLER_SERVER_H
+#define CAMLER_SERVER_H
+/* System libraries
+*/
 #include "stdio.h"
 #include "stdlib.h"
 #include "stdlib.h"
@@ -8,28 +9,27 @@
 #include "signal.h"
 #include "unistd.h"
 #include "time.h"
-/* Main header */
+
+/* Main header
+*/
 #include "utils.h"
 #include "protocol.h"
-#include "type.h"
 #include "stdsoc.h"
 #include "handle.h"
-#include "type.h"
 
-/* SDK header */
+/* SDK header
+*/
 #include "HCNetSDK/libHCNet.h"
 
 void initServer()
 {
-	/*
-	*	Initialize HCNet SDK
+	/* Initialize SDK
 	*/
 	NET_DVR_Init();
 }
 void cleanServer()
 {
-	/*
-	*	Cleanup HCNet SDK
+	/* Cleanup SDK
 	*/
 	NET_DVR_Cleanup();
 }

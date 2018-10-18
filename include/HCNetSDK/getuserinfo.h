@@ -1,7 +1,6 @@
 #ifndef GETUSERINFO_H
 #define GETUSERINFO_H
 #include "libHCNet.h"
-#include "../type.h"
 #include "../utils.h"
 #include "../protocol.h"
 #include "stdio.h"
@@ -10,9 +9,9 @@
 #include "unistd.h"
 #include "time.h"
 
-char* HCNetGetUserInfo(const char* s_ip, int s_port, const char* s_user, const char* s_pass)
+char* hcnet_get_user_info(const char* s_ip, int s_port, const char* s_user, const char* s_pass)
 {
-	char* ip = (char*)malloc(1024);
+    char* ip = (char*)malloc(1024);
     sprintf(ip, "%s", s_ip);
     char* user = (char*)malloc(1024);
     sprintf(user, "%s", s_user);
@@ -26,7 +25,7 @@ char* HCNetGetUserInfo(const char* s_ip, int s_port, const char* s_user, const c
     NET_DVR_SetConnectTime(300, 1);
     NET_DVR_DEVICEINFO_V30 struDeviceInfo;
 	LONG lUserID = NET_DVR_Login_V30(ip, s_port, user, pass, &struDeviceInfo);
-	JSONObjs objs;
+	json_objs objs;
     if (lUserID < 0)
     {
         int error = NET_DVR_GetLastError();
@@ -39,11 +38,11 @@ char* HCNetGetUserInfo(const char* s_ip, int s_port, const char* s_user, const c
         else
             printf("[ERROR]{HCNET}    '%s'@'%s' Login error , unknown\n", ip, user);
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "login");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "check your IP address of device or username and password");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "login");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "check your IP address of device or username and password");
+        r_return = compose_json(objs);
         return r_return;
     }
     /* Get device user config parameter */
@@ -55,26 +54,26 @@ char* HCNetGetUserInfo(const char* s_ip, int s_port, const char* s_user, const c
     {
         printf("[ERROR]{HCNET}    '%s'@'%s' Get user config parameter error %d\n", ip, user, NET_DVR_GetLastError());
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "getuserinfo");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "can't get device config parameter, check your device and try again");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "getuserinfo");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "can't get device config parameter, check your device and try again");
+        r_return = compose_json(objs);
         return r_return;
     }
     char* listUser = (char*)malloc(1024);
    	for (int i = 0; i < MAX_USERNUM_V30; ++i)
    	{
    		objs._size = 2;
-   		objs._element = (JSONObj*)malloc(2*sizeof(JSONObj));
+   		objs._element = (json_obj*)malloc(2*sizeof(json_obj));
    		if(struParams.struUser[i].sUserName[0] == NULL)
    			break;
-   		objs._element[0] = createJSONObj("username", (char*)(struParams.struUser[i].sUserName));
-   		objs._element[1] = createJSONObj("password", (char*)(struParams.struUser[i].sPassword));
+   		objs._element[0] = create_json("username", (char*)(struParams.struUser[i].sUserName));
+   		objs._element[1] = create_json("password", (char*)(struParams.struUser[i].sPassword));
    		if (i > 0)
-   			sprintf(listUser, "%s,%s", listUser, composeJSONObj(objs));
+   			sprintf(listUser, "%s,%s", listUser, compose_json(objs));
    		else
-   			sprintf(listUser, "[%s", composeJSONObj(objs));
+   			sprintf(listUser, "[%s", compose_json(objs));
    	}
    	sprintf(listUser, "%s]", listUser);
    	sprintf(r_return, "{\"action\":\"getuserinfo\",\"status\":\"success\",\"detail\":");

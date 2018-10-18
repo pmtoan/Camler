@@ -1,16 +1,6 @@
-/*
-*   About Project
-*       Name:           Camler
-*       Discription:    Web server controller for camera system
-*   About file
-*       File:           Header file
-*       Functions:
-*           HCNetChangeGW:   Change Gateway address of device
-*/
 #ifndef CHANGEGW_H
 #define CHANGEGW_H
 #include "libHCNet.h"
-#include "../type.h"
 #include "../utils.h"
 #include "../protocol.h"
 #include "stdio.h"
@@ -18,7 +8,7 @@
 #include "stdlib.h"
 #include "unistd.h"
 #include "time.h"
-char* HCNetChangeGW(const char* s_ip, int s_port, const char* s_user, const char* s_pass, 
+char* hcnet_change_gateway(const char* s_ip, int s_port, const char* s_user, const char* s_pass, 
 	const char* gate_way)
 {
 	/*
@@ -41,7 +31,7 @@ char* HCNetChangeGW(const char* s_ip, int s_port, const char* s_user, const char
     NET_DVR_SetConnectTime(300, 1);
     NET_DVR_DEVICEINFO_V30 struDeviceInfo;
 	LONG lUserID = NET_DVR_Login_V30(ip, s_port, user, pass, &struDeviceInfo);
-	JSONObjs objs;
+	json_objs objs;
     if (lUserID < 0)
     {
         int error = NET_DVR_GetLastError();
@@ -54,11 +44,11 @@ char* HCNetChangeGW(const char* s_ip, int s_port, const char* s_user, const char
         else
             printf("[ERROR]{HCNET}    '%s'@'%s' Login error , unknown\n", ip, user);
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "login");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "check your IP address of device or username and password");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "login");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "check your IP address of device or username and password");
+        r_return = compose_json(objs);
         return r_return;
     }
     /* Get device net config parameter */
@@ -70,11 +60,11 @@ char* HCNetChangeGW(const char* s_ip, int s_port, const char* s_user, const char
     {
         printf("[ERROR]{HCNET}    '%s'@'%s' Get user config parameter error %d\n", ip, user, NET_DVR_GetLastError());
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "getnetinfo");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "can't get device config parameter, check your device and try again");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "getnetinfo");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "can't get device config parameter, check your device and try again");
+        r_return = compose_json(objs);
         return r_return;
     }
     /* Set new DNS address */
@@ -85,11 +75,11 @@ char* HCNetChangeGW(const char* s_ip, int s_port, const char* s_user, const char
     {
         printf("[ERROR]{HCNET}    '%s'@'%s' Can't set new gateway address, error %d\n", ip, user, NET_DVR_GetLastError());
         objs._size = 3;
-        objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "changedns");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "check your device or new gateway address and try again");
-        r_return = composeJSONObj(objs);
+        objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "changedns");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "check your device or new gateway address and try again");
+        r_return = compose_json(objs);
         return r_return;
     }
     sprintf(r_return, "{\"action\":\"changeip\",\"status\":\"success\",\"detail\":{\"gateway\":\"%s\"}}", newgw);

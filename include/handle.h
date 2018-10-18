@@ -1,61 +1,58 @@
-#ifndef HANDLE_H
-#define HANDLE_H
+#ifndef CAMLER_HANDLE_H
+#define CAMLER_HANDLE_H
 #include "stdsoc.h"
 #include "protocol.h"
 #include "utils.h"
-#include "type.h"
 #include "hook.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 
-HTTPRes handleRequest(HTTPReq req)
+http_res handle_request(http_req req)
 {
-	/*
-	*	Main server handler
+	/* 	Main server handler
 	*	Check request from client and return response 
 	*/
 	if (strstr(req._method, "POST")
 		|| strstr(req._method, "post")
 		||strstr(req._method, "Post"))
 	{
-		/*
-		*	Get POST parameter
-		*	parameter is last char* from req._otherFields
+		/*  Get POST parameter
+		*	parameter is last char* from req._other_fields
 		*/
 		int i = 0;
 		char* tokenKey = (char*)malloc(1024);
-		while(!strstr(req._otherFields[i], NOTSET))
+		while(!strstr(req._other_fields[i], NOTSET))
 		{
-			if (strstr(req._otherFields[i], "CwesTokenAPI:"))
-				strcpy(tokenKey, stringSplit(req._otherFields[i], ' ', 1)[1]);
+			if (strstr(req._other_fields[i], "TokenAPI:"))
+				strcpy(tokenKey, string_split(req._other_fields[i], ' ', 1)[1]);
 			i++;
 		}
-		if (compareStrStr(tokenKey, API_TOKEN) == 0)
-			return hookDynamic("unauthorized");
-		else if (!strstr(req._otherFields[i-1], "="))
-			return hookDynamic("unauthorized");
-		else if (compareStrStr(req._requestURI, "/hcnet/scanning") == 1)
-			return hookScanning(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/capture") == 1)
-			return hookHCNetCapture(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/get/userinfo") == 1)
-			return hookHCNetGetUserInfo(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/change/pass") == 1)
-			return hookHCNetChangePass(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/get/netinfo") == 1)
-			return hookHCNetGetNetInfo(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/change/ip") == 1)
-			return hookHCNetChangeIp(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/change/dns") == 1)
-			return hookHCNetChangeDNS(req._otherFields[i-1]);
-		else if (compareStrStr(req._requestURI, "/hcnet/change/gw") == 1)
-			return hookHCNetChangeGW(req._otherFields[i-1]);
+		if (compare_str(tokenKey, API_TOKEN) == 0)
+			return hook_dynamic(UNAUTHORIZED);
+		else if (!strstr(req._other_fields[i-1], "="))
+			return hook_dynamic(UNAUTHORIZED);
+		else if (compare_str(req._request_uri, "/hcnet/scanning") == 1)
+			return hook_scanning(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/capture") == 1)
+			return hook_hcnet_capture(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/get/userinfo") == 1)
+			return hook_hcnet_get_user_info(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/change/pass") == 1)
+			return hook_hcnet_change_pass(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/get/netinfo") == 1)
+			return hook_hcnet_get_net_info(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/change/ip") == 1)
+			return hook_hcnet_change_ip(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/change/dns") == 1)
+			return hook_hcnet_change_dns(req._other_fields[i-1]);
+		else if (compare_str(req._request_uri, "/hcnet/change/gw") == 1)
+			return hook_hcnet_change_gateway(req._other_fields[i-1]);
 		else
-			return hookDynamic("unauthorized");
+			return hook_dynamic(UNAUTHORIZED);
 	}
 	else
-		return hookDynamic("unauthorized");
+		return hook_dynamic(UNAUTHORIZED);
 }
 
 #endif

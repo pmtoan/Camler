@@ -1,7 +1,6 @@
 #ifndef CHANGEIP_H
 #define CHANGEIP_H
 #include "libHCNet.h"
-#include "../type.h"
 #include "../utils.h"
 #include "../protocol.h"
 #include "stdio.h"
@@ -10,7 +9,7 @@
 #include "unistd.h"
 #include "time.h"
 
-char* HCNetChangeIp(const char* s_ip, int s_port, const char* s_user, const char* s_pass, 
+char* hcnet_change_ip(const char* s_ip, int s_port, const char* s_user, const char* s_pass, 
 	const char* new_ip, const char* new_mask, int ethernet_port)
 {
 	/*
@@ -37,7 +36,7 @@ char* HCNetChangeIp(const char* s_ip, int s_port, const char* s_user, const char
     NET_DVR_SetConnectTime(300, 1);
     NET_DVR_DEVICEINFO_V30 struDeviceInfo;
 	LONG lUserID = NET_DVR_Login_V30(ip, s_port, user, pass, &struDeviceInfo);
-	JSONObjs objs;
+	json_objs objs;
     if (lUserID < 0)
     {
         int error = NET_DVR_GetLastError();
@@ -50,11 +49,11 @@ char* HCNetChangeIp(const char* s_ip, int s_port, const char* s_user, const char
         else
             printf("[ERROR]{HCNET}    '%s'@'%s' Login error , unknown\n", ip, user);
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "login");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "check your IP address of device or username and password");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "login");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "check your IP address of device or username and password");
+        r_return = compose_json(objs);
         return r_return;
     }
     /* Get device net config parameter */
@@ -66,11 +65,11 @@ char* HCNetChangeIp(const char* s_ip, int s_port, const char* s_user, const char
     {
         printf("[ERROR]{HCNET}    '%s'@'%s' Get user config parameter error %d\n", ip, user, NET_DVR_GetLastError());
         objs._size = 3;
-    	objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "getnetinfo");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "can't get device config parameter, check your device and try again");
-        r_return = composeJSONObj(objs);
+    	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "getnetinfo");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "can't get device config parameter, check your device and try again");
+        r_return = compose_json(objs);
         return r_return;
     }
     /* Set new ip address */
@@ -82,11 +81,11 @@ char* HCNetChangeIp(const char* s_ip, int s_port, const char* s_user, const char
     {
         printf("[ERROR]{HCNET}    '%s'@'%s' Can't set new ip address %d\n", ip, user, NET_DVR_GetLastError());
         objs._size = 3;
-        objs._element = (JSONObj*)malloc(3*sizeof(JSONObj));
-        objs._element[0] = createJSONObj("action", "changeip");
-        objs._element[1] = createJSONObj("status", "failed");
-        objs._element[2] = createJSONObj("detail", "check your device or new ip address and try again");
-        r_return = composeJSONObj(objs);
+        objs._element = (json_obj*)malloc(3*sizeof(json_obj));
+        objs._element[0] = create_json("action", "changeip");
+        objs._element[1] = create_json("status", "failed");
+        objs._element[2] = create_json("detail", "check your device or new ip address and try again");
+        r_return = compose_json(objs);
         return r_return;
     }
     sprintf(r_return, "{\"action\":\"changeip\",\"status\":\"success\",\"detail\":{\"ip\":\"%s\",\"netmask\":\"%s\"}}", newip, newmask);

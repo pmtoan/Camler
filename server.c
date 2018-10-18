@@ -18,15 +18,15 @@ int main(int argc, char* argv[])
 		port = atoi(argv[1]);
 	if (bindToPort(server, port) == -1)
 	{
-		printf("[ERROR]{Cwes}   Can't bind to port %d\n", port);
+		printf("[ERROR]   Can't bind to port %d\n", port);
 		exit(-1);
 	}
 	listenClient(server, 1000);
-	printf("[INFO]{Cwes}   HIK Vision camera controller running on 0::%d\n", port);
+	printf("[INFO]   HIK Vision camera controller running on 0::%d\n", port);
 	struct sockaddr_storage client_addr;
 	unsigned int address_size = sizeof(client_addr);
 	int connect; /* Variable store socker from client */
-	char* message = (char*)malloc(4*KBYTE_T);
+	char* message = (char*)malloc(4*SIZE_LARGE);
 	initServer();	/* Initialize sdk, libraries */
 	pid_t pid;
 	while(1)
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 		if (connect < 0)
 		{
 			/* Can't accept connect from client */
-			printf("[ERROR]{Cwes}   Can't connect with %d.%d.%d.%d, step socket accept\n", 
+			printf("[ERROR]   Can't connect with %d.%d.%d.%d, step socket accept\n", 
 				ip[0], ip[1], ip[2], ip[3]);
 			exit(-1);
 		}
@@ -52,18 +52,18 @@ int main(int argc, char* argv[])
 			*	Child process keep connection with client
 			*/
 			signal(SIGINT, SIG_DFL);	/* Clear signal handler in child process, when parent exit, child will be exit too */
-			hear(connect, message, 4*KBYTE_T);	/* Recive message from client */
-			HTTPReq req = parseHTTPReq(message);	/* Parse message to http request */
-			HTTPRes res = handleRequest(req);	/* Handle request */
+			hear(connect, message, 4*SIZE_LARGE);	/* Recive message from client */
+			http_req req = parse_http_req(message);	/* Parse message to http request */
+			http_res res = handle_request(req);	/* Handle request */
 			printf("[INFO]{Cwes}   %s %s %s @ %d.%d.%d.%d:%d\n", 
-				req._method, req._requestURI, req._httpVersion,
+				req._method, req._request_uri, req._http_version,
 				ip[0], ip[1], ip[2], ip[3], port);
 			printf("[INFO]{Cwes}   %s %d %s @ %d.%d.%d.%d:%d\n", 
-				res._httpVersion, res._statusCode, res._statusMean,
+				res._http_version, res._status_code, res._status_mean,
 				ip[0], ip[1], ip[2], ip[3], port);
-			if (res._isValid == 1)
+			if (res._is_valid == 1)
 				/* If request is valid, send message response to client */
-				say(connect, composeHTTPRes(res));
+				say(connect, compose_http_res(res));
 			exit(0);
 		}
 		/*

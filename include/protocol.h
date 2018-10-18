@@ -1,19 +1,12 @@
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
+#ifndef CAMLER_PROTOCOL_H
+#define CAMLER_PROTOCOL_H
 #include "utils.h"
 
-#define GET "GET"
-#define POST "POST"
-
-/*
-*	Define structure of http packet include header and payload
+/*	Define structure of http packet include header and payload
 *	Define functions analysis, parse and compose http message
 */
 
-typedef struct HTTPRequest
+typedef struct http_request
 {
 	/*
 	*	Request-Line = Method SP Request-URI SP HTTP-Version CRLF
@@ -41,14 +34,14 @@ typedef struct HTTPRequest
 	*/
 
 	char* _method;	/*	Define http request method */
-	char* _requestURI;	/*	Define request uri */
-	char* _httpVersion;	/*	Define http version */
+	char* _request_uri;	/*	Define request uri */
+	char* _http_version;	/*	Define http version */
 	char* _host;	/*	Define server host */
-	char* _userAgent;	/*	Define user-agent */
-	char** _otherFields;	/*	Define other http request header fields */
-}HTTPReq;
+	char* _user_agent;	/*	Define user-agent */
+	char** _other_fields;	/*	Define other http request header fields */
+}http_req;
 
-typedef struct HTTPResponse
+typedef struct http_response
 {
 	/*
 	*	Message Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
@@ -83,177 +76,179 @@ typedef struct HTTPResponse
 	*		</body>
 	*		</html>
 	*/
-	int _isValid;	/* equal 1 if request valid, equal 0 if request not valid */
-	char* _httpVersion;	/* Example: HTTP/1.1 */
-	int _statusCode;	/* Example: 404 */
-	char* _statusMean;	/* Example: Not Found */
+	int _is_valid;	/* equal 1 if request valid, equal 0 if request not valid */
+	char* _http_version;	/* Example: HTTP/1.1 */
+	int _status_code;	/* Example: 404 */
+	char* _status_mean;	/* Example: Not Found */
 	char* _server;	/* Example: Apache/2.2 */
-	int _contentLength;
-	char* _contentType;	/* Example: text/plain, text/html, ... */
+	int _content_length;
+	char* _content_type;	/* Example: text/plain, text/html, ... */
 	char* _body;	/* Response content*/
-	char** _otherFields;
-}HTTPRes;
+	char** _other_fields;
+}http_res;
 
-HTTPReq allocHTTPReq()
+/* Define function for Allocate memory for http_request structure */
+http_req alloc_http_req();
+
+/*	Define function for Allocate memory for http_response structure */
+http_res alloc_http_res();
+
+/* Define function for De-allocate memory for http_request structure */
+void dealloc_http_req(http_req req);
+
+/* Define function for De-allocate memory for http_response structure */
+void dealloc_http_res(http_res res);
+
+/* Define function for Output http_request information */
+void print_http_req(http_req req);
+
+/* Define function for Output http_response Information */
+void print_http_res(http_res res);
+
+/* Compose a http_request structure to string format*/
+char* compose_http_req(http_req req);
+
+/* Compose a http_response structure to string format */
+char* compose_http_res(http_res res);
+
+/* Parse message request form client to http_req structure */
+http_req parse_http_req(const char* message);
+
+/*
+*	Parse a string parameter post method to json_obj*
+*	Example:
+*		user=name&pass=password123 -> {"user":"name","pass":"password"}
+*/
+json_objs parse_post_parameter_to_json(const char* parameter);
+
+http_req alloc_http_req()
 {
-	/* 
-	*	Define function for Allocate memory for HTTPRequest structure 
-	*/
-	HTTPReq req; /* for return */
-	req._method = (char*)malloc(4);	/* For GET and POST only */
-	req._requestURI = (char*)malloc(1024);
-	req._httpVersion = (char*)malloc(10);
-	req._host = (char*)malloc(32);
-	req._userAgent = (char*)malloc(1024);
-	int i; /* for loop allocate memory */
-	req._otherFields = (char**)malloc(32*sizeof(char*)); /* max other fileds is 32 */
-	for(i=0;i<16;i++)
+	http_req req; /* for return */
+	req._method = (char*)malloc(SIZE_TINY);	/* For GET and POST only */
+	req._request_uri = (char*)malloc(SIZE_SMALL);
+	req._http_version = (char*)malloc(SIZE_SMALL);
+	req._host = (char*)malloc(SIZE_SMALL);
+	req._user_agent = (char*)malloc(SIZE_LARGE);
+	req._other_fields = (char**)malloc(SIZE_SMALL*sizeof(char*)); /* max other fileds is 32 */
+	for(int i=0;i<16;i++)
 	{
-		req._otherFields[i] = (char*)malloc(512);
-		strcpy(req._otherFields[i], NOTSET);
+		req._other_fields[i] = (char*)malloc(SIZE_LARGE);
+		sprintf(req._other_fields[i], "%s", NOTSET);
 	}
 	return req;
 }
 
-HTTPRes allocHTTPRes()
+http_res alloc_http_res()
 {
-	/* 
-	*	Define function for Allocate memory for HTTPResponse structure 
-	*/
-	HTTPRes res; /* for return */
-	res._isValid = 0;
-	res._httpVersion = (char*)malloc(10);
-	res._statusMean = (char*)malloc(32);
-	res._server = (char*)malloc(32);	/* Web Server service name */
-	res._contentType = (char*)malloc(32);
-	res._body = (char*)malloc(4096);	/* Max body size is 4096 bytes */
-	int i; /* for loop allocate memory */
-	res._otherFields = (char**)malloc(32*sizeof(char*)); /* max other fileds is 32 */
-	for(i=0;i<16;i++)
+	http_res res; /* for return */
+	res._is_valid = 0;
+	res._http_version = (char*)malloc(SIZE_SMALL);
+	res._status_mean = (char*)malloc(SIZE_SMALL);
+	res._server = (char*)malloc(SIZE_SMALL);	/* Web Server service name */
+	res._content_type = (char*)malloc(SIZE_SMALL);
+	res._body = (char*)malloc(4*SIZE_LARGE);	/* Max body size is 4096 bytes */
+	res._other_fields = (char**)malloc(SIZE_SMALL*sizeof(char*)); /* max other fileds is 32 */
+	for(int i=0;i<16;i++)
 	{
-		res._otherFields[i] = (char*)malloc(512);
-		strcpy(res._otherFields[i], NOTSET);
+		res._other_fields[i] = (char*)malloc(SIZE_LARGE);
+		strcpy(res._other_fields[i], NOTSET);
 	}
 	return res;
 }
 
-void deallocHTTPReq(HTTPReq req)
+void dealloc_http_req(http_req req)
 {
-	/* 
-	*	Define function for De-allocate memory for HTTPRequest structure 
-	*/
 	free(req._method);
-	free(req._requestURI);
-	free(req._httpVersion);
+	free(req._request_uri);
+	free(req._http_version);
 	free(req._host);
-	free(req._userAgent);
-	int i; /* for loop de-allocate memory */
-	for(i=0;i<16;i++)
-		free(req._otherFields[i]);
-	free(req._otherFields);
+	free(req._user_agent);
+	for(int i=0;i<SIZE_SMALL;i++)
+		free(req._other_fields[i]);
+	free(req._other_fields);
 }
 
-void deallocHTTPRes(HTTPRes res)
+void dealloc_http_res(http_res res)
 {
-	/* 
-	*	Define function for De-allocate memory for HTTPResponse structure 
-	*/
-	free(res._httpVersion);
-	free(res._statusMean);
+	free(res._http_version);
+	free(res._status_mean);
 	free(res._server);
-	free(res._contentType);
+	free(res._content_type);
 	free(res._body);
-	int i; /* for loop de-allocate memory */
-	for(i=0;i<16;i++)
-		free(res._otherFields[i]);
-	free(res._otherFields);
+	for(int i=0;i<SIZE_SMALL;i++)
+		free(res._other_fields[i]);
+	free(res._other_fields);
 }
 
-void printHTTPReq(HTTPReq req)
+void print_http_req(http_req req)
 {
-	/*
-	*	Define function for Output HTTPRequest Information 
-	*/
-	printf("%s %s %s\n", req._method, req._requestURI, req._httpVersion);
+	printf("%s %s %s\n", req._method, req._request_uri, req._http_version);
 	printf("Host: %s\n", req._host);
-	printf("User-Agent: %s\n", req._userAgent);
-	int i; /* for loop */
-	i = 0;
-	while(!strstr(req._otherFields[i], NOTSET))
+	printf("User-Agent: %s\n", req._user_agent);
+	int i = 0; /* for loop */
+	while(!strstr(req._other_fields[i], NOTSET))
 	{
-		printf("%s\n", req._otherFields[i]);
+		printf("%s\n", req._other_fields[i]);
 		i++;
 	}
 }
 
-void printHTTPRes(HTTPRes res)
+void print_http_res(http_res res)
 {
-	/* 
-	*	Define function for Output HTTPResponse Information 
-	*/
-	printf("%s %d %s\n", res._httpVersion, res._statusCode, res._statusMean);
+	printf("%s %d %s\n", res._http_version, res._status_code, res._status_mean);
 	printf("%s\n", res._server);
-	printf("%d\n", res._contentLength);
-	printf("%s\n", res._contentType);
+	printf("%d\n", res._content_length);
+	printf("%s\n", res._content_type);
 	printf("%s\n", res._body);
-	int i;
-	i = 0;
-	while(!strstr(res._otherFields[i], NOTSET))
+	int i = 0;
+	while(!strstr(res._other_fields[i], NOTSET))
 	{
-		printf("%s\n", res._otherFields[i]);
+		printf("%s\n", res._other_fields[i]);
 		i++;
 	}
 }
 
-char* composeHTTPReq(HTTPReq req)
+char* compose_http_req(http_req req)
 {
-	/*
-	*	Compose a HTTPRequest structure to string format
-	*/
 	char* message;
-	message = (char*)malloc(8192);	/* Max message size is 8192 bytes */
+	message = (char*)malloc(4*SIZE_LARGE);	/* Max message size is 4096 bytes */
 	sprintf(
 		message, 
 		"%s %s %s\r\nHost: %s\r\nUser-Agent: %s\r\n", 
 		req._method,
-		req._requestURI,
-		req._httpVersion,
+		req._request_uri,
+		req._http_version,
 		req._host,
-		req._userAgent
+		req._user_agent
 	);
-	int i;	/* for loop */
-	i = 0;
-	while(!strstr(req._otherFields[i], NOTSET))
+	int i = 0;	/* for loop */
+	while(!strstr(req._other_fields[i], NOTSET))
 	{
-		strcat(message, req._otherFields[i]);
+		strcat(message, req._other_fields[i]);
 		strcat(message, "\r\n");
 		i++;
 	}
 	return message;
 }
 
-char* composeHTTPRes(HTTPRes res)
+char* compose_http_res(http_res res)
 {
-	/*
-	*	Compose a HTTPResponse structure to string format
-	*/
 	char* message;
-	message = (char*)malloc(8192);	/* Max message size is 8192 bytes */
+	message = (char*)malloc(4*SIZE_LARGE);	/* Max message size is 4096 bytes */
 	sprintf(
 		message, 
 		"%s %d %s\r\nServer: %s\r\nConnection: keep-alive\r\nContentLength: %d\r\nContentType: %s\r\n", 
-		res._httpVersion,
-		res._statusCode,
-		res._statusMean,
+		res._http_version,
+		res._status_code,
+		res._status_mean,
 		res._server,
-		res._contentLength,
-		res._contentType
+		res._content_length,
+		res._content_type
 	);
-	int i;	/* for loop */
-	i = 0;
-	while(!strstr(res._otherFields[i], NOTSET))
+	int i = 0;	/* for loop */
+	while(!strstr(res._other_fields[i], NOTSET))
 	{
-		strcat(message, res._otherFields[i]);
+		strcat(message, res._other_fields[i]);
 		strcat(message, "\r\n");
 		i++;
 	}
@@ -263,16 +258,13 @@ char* composeHTTPRes(HTTPRes res)
 	return message;
 }
 
-HTTPReq parseHTTPReq(char* message)
+http_req parse_http_req(const char* message)
 {
-	/*
-	*	Parse message request form client to HTTPReq structure
-	*/
-	HTTPReq req;
-	req = allocHTTPReq();
-	char* buffer = (char*)malloc(1024);	/* line string buffer */
+	http_req req;
+	req = alloc_http_req();
+	char* buffer = (char*)malloc(SIZE_LARGE);	/* line string buffer */
 	int mes_index = 0;	/* index of message */
-	int req_otherFileds_index = 0;	/* index for HTTPReq _otherFileds array */ 
+	int req_other_fileds_index = 0;	/* index for http_req _otherFileds array */ 
 	while(mes_index < strlen(message))
 	{
 		int buf_index = 0;
@@ -285,65 +277,51 @@ HTTPReq parseHTTPReq(char* message)
 		buffer[buf_index] = '\0';
 		if (strstr(buffer, "HTTP"))
 		{
-			char** line = stringSplit(buffer, ' ', 2);
+			char** line = string_split(buffer, ' ', 2);
 			strcpy(req._method, line[0]);
-			strcpy(req._requestURI, line[1]);
-			strcpy(req._httpVersion, line[2]);
+			strcpy(req._request_uri, line[1]);
+			strcpy(req._http_version, line[2]);
 			free(line);
 		}
 		else if (strstr(buffer, "Host:"))
 		{
-			char** line = stringSplit(buffer, ' ', 1);
+			char** line = string_split(buffer, ' ', 1);
 			strcpy(req._host, line[1]);
 			free(line);
 		}
 		else if (strstr(buffer, "User-Agent:"))
 		{
-			char** line = stringSplit(buffer, ' ', 1);
-			strcpy(req._userAgent, line[1]);
+			char** line = string_split(buffer, ' ', 1);
+			strcpy(req._user_agent, line[1]);
 			free(line);
 		}
 		else
 		{
-			strcpy(req._otherFields[req_otherFileds_index], buffer);
-			req_otherFileds_index++;
+			strcpy(req._other_fields[req_other_fileds_index], buffer);
+			req_other_fileds_index++;
 		}
 		while((message[mes_index] == '\r') 
 			|| (message[mes_index] == '\n')
-			|| (message[mes_index] == '\0')
-			/*|| (mes_index < strlen(message))*/)
+			|| (message[mes_index] == '\0'))
 			mes_index++;
 	}
 	free(buffer);
 	return req;
 }
 
-HTTPRes parseHTTPRes(const char* message)
+json_objs parse_post_parameter_to_json(const char* parameter)
 {
-	HTTPRes res;
-	res = allocHTTPRes();
-
-	return res;
-}
-
-JSONObjs parsePostParameterToJSONObj(const char* parameter)
-{
-	/*
-	*	Parse a string parameter post method to JSONObj*
-	*	Example:
-	*		user=name&pass=password123 -> {"user":"name","pass":"password"}
-	*/
-	JSONObjs objs;
-	int count = countStrStr(parameter, "&");
+	json_objs objs;
+	int count = count_str_str(parameter, "&");
 	if (strlen(parameter) != 0)
 		objs._size = count+1;
 	else
 		objs._size = 0;
-	objs._element = (JSONObj*)malloc(objs._size);
+	objs._element = (json_obj*)malloc(objs._size);
 	int i = 0;
 	int objs_index = 0;
-	char key[32];
-	char value[1024];
+	char key[SIZE_MEDIUM];
+	char value[SIZE_MEDIUM];
 	int j;
 	while(count >= 0)
 	{
@@ -368,7 +346,7 @@ JSONObjs parsePostParameterToJSONObj(const char* parameter)
 			j++;
 		}
 		value[j] = '\0';
-		objs._element[objs_index] = createJSONObj(key, value);
+		objs._element[objs_index] = create_json(key, value);
 		objs_index++;
 		i++;
 		if (i >= strlen(parameter))
