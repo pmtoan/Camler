@@ -7,16 +7,36 @@
 #### Build and run server
 ```
 git clone https://github.com/pmtoan/Camler.git
-cd Camler
+cd Camler/sdk
 g++ -w -L.  -o server server.c -Wl,-rpath=./:./HCNetSDKCom:. -lhcnetsdk  
-./server
+./server 30497 >> sdk_server.log &
+cd ../api
+apt install python3 python3-pip
+python3 -m pip install flask
+python3 -m pip install requests
+sudo python3 app.py
 ```
+API server run on port 80
+
 #### Rest API
 ##### Header
 * Content-Type: application/x-www-form-urlencoded
-* TokenAPI: key in file APIKeyAdmin.txt
 
 ##### Body
+###### Setup rtsp proxy for liveview
+>Method: POST  
+>Url: [ip]:[port]/hcnet/rtsp
+>Parameters:
+>* ips: list of ip camera separated by space  
+
+>Example with curl
+```
+curl -d "ips=172.22.22 172.22.22.23 172.22.22.24 ..."" -X POST http://127.0.0.1:30497/hcnet/rtsp
+```  
+>JSON response
+```
+{"status":"rtsp://127.0.0.1:8900/proxyStream"}
+```
 ###### Scanning, scan ip of HCNet device in a network range
 >Method: POST  
 >Url: [ip]:[port]/hcnet/scanning  
