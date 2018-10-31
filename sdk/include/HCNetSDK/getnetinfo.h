@@ -38,7 +38,7 @@ char* hcnet_get_net_info(const char* s_ip, int s_port, const char* s_user, const
         else if (error==152)
             printf("[ERROR]{HCNET}    '%s'@'%s' Login error , username not exists\n", ip, user);
         else
-            printf("[ERROR]{HCNET}    '%s'@'%s' Login error , unknown\n", ip, user);
+            printf("[ERROR]{HCNET}    '%s'@'%s' Login error , unknown %d\n", ip, user, error);
         objs._size = 3;
     	objs._element = (json_obj*)malloc(3*sizeof(json_obj));
         objs._element[0] = create_json("action", "login");
@@ -67,16 +67,28 @@ char* hcnet_get_net_info(const char* s_ip, int s_port, const char* s_user, const
     char* buffer = (char*)malloc(1024);
     for (int i = 0; i < MAX_ETHERNET; i++)
     {
-    	objs._size = 6;
-    	objs._element = (json_obj*)malloc(6*sizeof(json_obj));
+    	objs._size = 7;
+    	objs._element = (json_obj*)malloc(7*sizeof(json_obj));
     	objs._element[0] = create_json("ip", struParams.struEtherNet[i].struDVRIP.sIpV4);
     	objs._element[1] = create_json("netmask", struParams.struEtherNet[i].struDVRIPMask.sIpV4);
+        char* buffer_mac = (char*)malloc(18);
+        sprintf(
+            buffer_mac,
+            "%x:%x:%x:%x:%x:%x",
+            struParams.struEtherNet[i].byMACAddr[0],
+            struParams.struEtherNet[i].byMACAddr[1],
+            struParams.struEtherNet[i].byMACAddr[2],
+            struParams.struEtherNet[i].byMACAddr[3],
+            struParams.struEtherNet[i].byMACAddr[4],
+            struParams.struEtherNet[i].byMACAddr[5]
+        );
+        objs._element[2] = create_json("mac", buffer_mac);
     	char numport[5];
     	sprintf(numport, "%d", struParams.wHttpPortNo);
-    	objs._element[2] = create_json("httpport", numport);
-    	objs._element[3] = create_json("dns1", struParams.struDnsServer1IpAddr.sIpV4);
-    	objs._element[4] = create_json("dns2", struParams.struDnsServer2IpAddr.sIpV4);
-    	objs._element[5] = create_json("gateway", struParams.struGatewayIpAddr.sIpV4);
+    	objs._element[3] = create_json("httpport", numport);
+    	objs._element[4] = create_json("dns1", struParams.struDnsServer1IpAddr.sIpV4);
+    	objs._element[5] = create_json("dns2", struParams.struDnsServer2IpAddr.sIpV4);
+    	objs._element[6] = create_json("gateway", struParams.struGatewayIpAddr.sIpV4);
     	buffer = compose_json(objs);
     	if (i==0)
     		sprintf(r_return, "%s%s", r_return, buffer);
